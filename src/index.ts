@@ -1,11 +1,16 @@
 import express from 'express'
 import { bodyParser } from './middlewares/body-parser'
+import jwt from 'jsonwebtoken'
+import { authenticateJWT } from './middlewares/jwt'
 
 const app = express()
+
+const SECRET_KEY = 'my_secret_key'
 
 app.use(bodyParser)
 
 const products = []
+const users = []
 
 /* BODY PARAM EXAMPLE
   O Body, como o nome diz, é o corpo da requisição que contém todos os dados que
@@ -13,7 +18,7 @@ const products = []
   somente em requisições que devem enviar informações, como create ou update.
 */
 
-app.post('/product', (req, res) => {
+app.post('/product', authenticateJWT, (req, res) => {
   const { name, price } = req.body
     if(!name) {
       res.status(400).json({ message: 'Invalid Param' })
@@ -42,9 +47,11 @@ app.post('/product', (req, res) => {
   Por exemplo:http://api.example.com/products/1
 */
 
-app.get('/product/:id', (req, res) => {
-  const param = req.params.id
-  const search = products.find(product => product.id === param)
+app.get('/product/:id', authenticateJWT, (req, res) => {
+  const { id } = req.params
+
+  const search = products.find(product => product.id === id)
+
   console.log(search)
 
   if(!search) {
@@ -66,10 +73,9 @@ app.get('/product/:id', (req, res) => {
   recuperar produtos com nome igual a laptop e disponível igual a verdadeiro.
 */
 
-app.get('/product', (req, res) => {
+app.get('/product', authenticateJWT, (req, res) => {
   const { name } = req.query
   const search = products.find(product => product.name === name)
-  console.log(req.headers)
 
   const { accept } = req.headers
 
@@ -99,6 +105,41 @@ app.get('/product', (req, res) => {
 
   res.status(200).json(search)
 
+})
+
+// JWT EXAMPLE
+
+app.post('/register', (req, res) => {
+  const { username, password } = req.body
+
+  const user = users.find(user => user.username === username)
+
+  if(user) {
+    res.status(400).json({ message: 'user already exists' })
+  }
+
+  users.push({
+    username,
+    password
+  })
+
+  const token = jwt.sign({ username }, SECRET_KEY, { expiresIn: '1h' })
+  
+  res.status(201).json({ token })
+})
+
+app.post('/login', (req, res) => {
+  const { username, password } = req.body
+
+  const user = users.find(user => user.username === username)
+
+  if(!user) {
+    res.status(400).json({ message: 'user not exists' })
+  }
+
+  const token = jwt.sign({ username }, SECRET_KEY, { expiresIn: '1h' })
+  
+  res.status(201).json({ token })
 })
 
 app.listen(5050, () => {
