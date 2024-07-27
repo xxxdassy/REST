@@ -1,14 +1,17 @@
-import { Request, Response } from "express";
-import { ListProductOutputDto, ListProductUsecase } from "../../../../../usecases/list-product/list-product.usecase";
-import { HttpMethod, Route } from "../route";
-import { DbListProduct } from "../../../../../data/usecases/list-products";
-import { ProductModel } from "../../../../../domain/product/models/product";
+import { Request, Response } from 'express'
+import {
+  ListProductOutputDto,
+  ListProductUsecase,
+} from '../../../../../usecases/list-product/list-product.usecase'
+import { HttpMethod, Route } from '../route'
+import { DbListProduct } from '../../../../../data/usecases/list-products'
+import { ProductModel } from '../../../../../domain/product/models/product'
 
 export type ListProductResponseDto = {
   products: {
-    id: string;
-    name: string;
-    price: number;
+    id: string
+    name: string
+    price: number
   }[]
 }
 
@@ -16,15 +19,11 @@ export class ListProductRoute implements Route {
   private constructor(
     private readonly path: string,
     private readonly method: HttpMethod,
-    private readonly listProductService: DbListProduct
+    private readonly listProductService: DbListProduct,
   ) {}
 
   public static create(listProductService: DbListProduct) {
-    return new ListProductRoute(
-      "/product",
-      HttpMethod.GET,
-      listProductService
-    )
+    return new ListProductRoute('/product', HttpMethod.GET, listProductService)
   }
 
   public getHandler() {
@@ -37,15 +36,13 @@ export class ListProductRoute implements Route {
     }
   }
 
-public getPath(): string {
+  public getPath(): string {
     return this.path
-}
+  }
 
-public getMethod(): HttpMethod {
-  return this.method
-}
-
-  
+  public getMethod(): HttpMethod {
+    return this.method
+  }
 
   private present(input: ProductModel[]): ListProductResponseDto {
     const response = {
@@ -53,7 +50,7 @@ public getMethod(): HttpMethod {
         id: product.id,
         name: product.name,
         price: product.price,
-      }))
+      })),
     }
 
     return response

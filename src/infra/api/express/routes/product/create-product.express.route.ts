@@ -1,11 +1,14 @@
-import { Request, Response } from "express";
-import { CreateProductInputDto, CreateProductUsecase } from "../../../../../usecases/create-product/create-product.usecase";
-import { HttpMethod, Route } from "../route";
-import { DbAddProduct } from "../../../../../data/usecases/add-products";
-import { ProductModelInputDto } from "../../../../../domain/product/usecases/add-product";
+import { Request, Response } from 'express'
+import {
+  CreateProductInputDto,
+  CreateProductUsecase,
+} from '../../../../../usecases/create-product/create-product.usecase'
+import { HttpMethod, Route } from '../route'
+import { DbAddProduct } from '../../../../../data/usecases/add-products'
+import { ProductModelInputDto } from '../../../../../domain/product/usecases/add-product'
 
 export type CreateProductResponseDto = {
-  id: string;
+  id: string
 }
 
 export class CreateProductRoute implements Route {
@@ -17,7 +20,7 @@ export class CreateProductRoute implements Route {
 
   public static create(createProductService: DbAddProduct) {
     return new CreateProductRoute(
-      "/product",
+      '/product',
       HttpMethod.POST,
       createProductService,
     )
@@ -25,17 +28,17 @@ export class CreateProductRoute implements Route {
 
   public getHandler() {
     return async (request: Request, response: Response) => {
-      const { name, price, quantity } = request.body;
+      const { name, price, quantity } = request.body
 
       const input: ProductModelInputDto = {
         name,
         price,
-        quantity
+        quantity,
       }
 
       const output: CreateProductResponseDto =
-        await this.createProductService.save(input);
-      
+        await this.createProductService.save(input)
+
       const responseBody = this.present(output)
 
       response.status(201).json(responseBody).send()
@@ -43,12 +46,12 @@ export class CreateProductRoute implements Route {
   }
 
   public getPath(): string {
-      return this.path
+    return this.path
   }
 
   public getMethod(): HttpMethod {
     return this.method
-}
+  }
 
   private present(input: CreateProductResponseDto): CreateProductResponseDto {
     const response = { id: input.id }

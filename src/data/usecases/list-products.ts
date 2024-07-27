@@ -1,6 +1,6 @@
-import { ProductModel } from "../../domain/product/models/product";
-import { ListProduct } from "../../domain/product/usecases/list-product";
-import { ListProductReposity } from "../protocol/list-product-repository";
+import { ProductModel } from '../../domain/product/models/product'
+import { ListProduct } from '../../domain/product/usecases/list-product'
+import { ListProductReposity } from '../protocol/list-product-repository'
 
 export class DbListProduct implements ListProduct {
   private readonly listProductRepository: ListProductReposity

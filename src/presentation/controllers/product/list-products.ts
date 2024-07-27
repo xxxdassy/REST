@@ -1,8 +1,7 @@
-
-import { ListProduct } from "../../../domain/product/usecases/list-product";
-import { ok, serverError } from "../../helpers/http-helper";
-import { Controller } from "../../protocols/controller";
-import { HttpRequest, HttpResponse } from "../../protocols/http";
+import { ListProduct } from '../../../domain/product/usecases/list-product'
+import { ok, serverError } from '../../helpers/http-helper'
+import { Controller } from '../../protocols/controller'
+import { HttpRequest, HttpResponse } from '../../protocols/http'
 
 export class ListProductController implements Controller {
   private listProduct: ListProduct

@@ -20,23 +20,23 @@ const users = []
 
 app.post('/product', authenticateJWT, (req, res) => {
   const { name, price } = req.body
-    if(!name) {
-      res.status(400).json({ message: 'Invalid Param' })
-    }
+  if (!name) {
+    res.status(400).json({ message: 'Invalid Param' })
+  }
 
-    if(!price) {
-      res.status(400).json({ message: 'Invalid Param' })
-    }
+  if (!price) {
+    res.status(400).json({ message: 'Invalid Param' })
+  }
 
-    const product = {
-      id: crypto.randomUUID(),
-      name,
-      price
-    }
+  const product = {
+    id: crypto.randomUUID(),
+    name,
+    price,
+  }
 
-    products.push(product)
+  products.push(product)
 
-    res.status(200).json(product)
+  res.status(200).json(product)
 })
 
 /* ROUTE PARAM EXAMPLE
@@ -50,11 +50,11 @@ app.post('/product', authenticateJWT, (req, res) => {
 app.get('/product/:id', authenticateJWT, (req, res) => {
   const { id } = req.params
 
-  const search = products.find(product => product.id === id)
+  const search = products.find((product) => product.id === id)
 
   console.log(search)
 
-  if(!search) {
+  if (!search) {
     res.status(404).json({ message: 'not found' })
   }
 
@@ -75,11 +75,11 @@ app.get('/product/:id', authenticateJWT, (req, res) => {
 
 app.get('/product', authenticateJWT, (req, res) => {
   const { name } = req.query
-  const search = products.find(product => product.name === name)
+  const search = products.find((product) => product.name === name)
 
   const { accept } = req.headers
 
-  if(!search) {
+  if (!search) {
     res.status(404).json({ message: 'not found' })
   }
 
@@ -95,7 +95,7 @@ app.get('/product', authenticateJWT, (req, res) => {
   credenciais para acessar um recurso, mas também um formato de resposta desejado.
 */
 
-  if(accept.includes('text/html')) {
+  if (accept.includes('text/html')) {
     res.status(200).send(`
       <p>id: ${search.id}</p>
       <p>name: ${search.name}</p>
@@ -104,7 +104,6 @@ app.get('/product', authenticateJWT, (req, res) => {
   }
 
   res.status(200).json(search)
-
 })
 
 // JWT EXAMPLE
@@ -112,33 +111,33 @@ app.get('/product', authenticateJWT, (req, res) => {
 app.post('/register', (req, res) => {
   const { username, password } = req.body
 
-  const user = users.find(user => user.username === username)
+  const user = users.find((user) => user.username === username)
 
-  if(user) {
+  if (user) {
     res.status(400).json({ message: 'user already exists' })
   }
 
   users.push({
     username,
-    password
+    password,
   })
 
   const token = jwt.sign({ username }, SECRET_KEY, { expiresIn: '1h' })
-  
+
   res.status(201).json({ token })
 })
 
 app.post('/login', (req, res) => {
   const { username, password } = req.body
 
-  const user = users.find(user => user.username === username)
+  const user = users.find((user) => user.username === username)
 
-  if(!user) {
+  if (!user) {
     res.status(400).json({ message: 'user not exists' })
   }
 
   const token = jwt.sign({ username }, SECRET_KEY, { expiresIn: '1h' })
-  
+
   res.status(201).json({ token })
 })
 

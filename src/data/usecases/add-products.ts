@@ -1,6 +1,9 @@
-import { ProductModel } from "../../domain/product/models/product";
-import { AddProduct, ProductModelInputDto } from "../../domain/product/usecases/add-product";
-import { AddProductReposity } from "../protocol/add-product-repository";
+import { ProductModel } from '../../domain/product/models/product'
+import {
+  AddProduct,
+  ProductModelInputDto,
+} from '../../domain/product/usecases/add-product'
+import { AddProductReposity } from '../protocol/add-product-repository'
 
 export class DbAddProduct implements AddProduct {
   private readonly addProductReposity: AddProductReposity
