@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import { CreateProductInputDto, CreateProductUsecase } from "../../../../../usecases/create-product/create-product.usecase";
 import { HttpMethod, Route } from "../route";
+import { DbAddProduct } from "../../../../../data/usecases/add-products";
+import { ProductModelInputDto } from "../../../../../domain/product/usecases/add-product";
 
 export type CreateProductResponseDto = {
   id: string;
@@ -10,10 +12,10 @@ export class CreateProductRoute implements Route {
   private constructor(
     private readonly path: string,
     private readonly method: HttpMethod,
-    private readonly createProductService: CreateProductUsecase,
+    private readonly createProductService: DbAddProduct,
   ) {}
 
-  public static create(createProductService: CreateProductUsecase) {
+  public static create(createProductService: DbAddProduct) {
     return new CreateProductRoute(
       "/product",
       HttpMethod.POST,
@@ -23,15 +25,16 @@ export class CreateProductRoute implements Route {
 
   public getHandler() {
     return async (request: Request, response: Response) => {
-      const { name, price } = request.body;
+      const { name, price, quantity } = request.body;
 
-      const input: CreateProductInputDto = {
+      const input: ProductModelInputDto = {
         name,
-        price
+        price,
+        quantity
       }
 
       const output: CreateProductResponseDto =
-        await this.createProductService.execute(input);
+        await this.createProductService.save(input);
       
       const responseBody = this.present(output)
 

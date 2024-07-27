@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import { ListProductOutputDto, ListProductUsecase } from "../../../../../usecases/list-product/list-product.usecase";
 import { HttpMethod, Route } from "../route";
+import { DbListProduct } from "../../../../../data/usecases/list-products";
+import { ProductModel } from "../../../../../domain/product/models/product";
 
 export type ListProductResponseDto = {
   products: {
@@ -14,10 +16,10 @@ export class ListProductRoute implements Route {
   private constructor(
     private readonly path: string,
     private readonly method: HttpMethod,
-    private readonly listProductService: ListProductUsecase
+    private readonly listProductService: DbListProduct
   ) {}
 
-  public static create(listProductService: ListProductUsecase) {
+  public static create(listProductService: DbListProduct) {
     return new ListProductRoute(
       "/product",
       HttpMethod.GET,
@@ -27,7 +29,7 @@ export class ListProductRoute implements Route {
 
   public getHandler() {
     return async (request: Request, response: Response) => {
-      const output = await this.listProductService.execute()
+      const output = await this.listProductService.list()
 
       const responseBody = this.present(output)
 
@@ -45,9 +47,9 @@ public getMethod(): HttpMethod {
 
   
 
-  private present(input: ListProductOutputDto): ListProductResponseDto {
-    const response: ListProductResponseDto = {
-      products: input.products.map((product) => ({
+  private present(input: ProductModel[]): ListProductResponseDto {
+    const response = {
+      products: input.map((product) => ({
         id: product.id,
         name: product.name,
         price: product.price,
