@@ -8,7 +8,7 @@ export const authenticateJWT = (
 ) => {
   const token = req.headers.authorization
 
-  const SECRET_KEY = 'my_secret_key'
+  const SECRET_KEY = process.env.SECRET_KEY
 
   if (token) {
     jwt.verify(token, SECRET_KEY, (err, user) => {

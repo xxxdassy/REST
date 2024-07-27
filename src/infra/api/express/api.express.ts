@@ -1,13 +1,15 @@
 import { Api } from '../api'
 import express, { Express } from 'express'
 import { Route } from './routes/route'
+import { bodyParser } from './middlewares/body-parser'
+// import { authenticateJWT } from './middlewares/jwt'
 
 export class ApiExpress implements Api {
   private app: Express
 
   private constructor(routes: Route[]) {
     this.app = express()
-    this.app.use(express.json())
+    this.app.use(bodyParser)
     this.addRoutes(routes)
   }
 

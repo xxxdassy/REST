@@ -1,11 +1,11 @@
 import express from 'express'
-import { bodyParser } from './middlewares/body-parser'
+import { bodyParser } from '../infra/api/express/middlewares/body-parser'
 import jwt from 'jsonwebtoken'
-import { authenticateJWT } from './middlewares/jwt'
+import { authenticateJWT } from '../infra/api/express/middlewares/jwt'
 
 const app = express()
 
-const SECRET_KEY = 'my_secret_key'
+const SECRET_KEY = process.env.SECRET_KEY
 
 app.use(bodyParser)
 
