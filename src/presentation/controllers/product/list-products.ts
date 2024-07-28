@@ -12,7 +12,13 @@ export class ListProductController implements Controller {
 
   async handle(request: HttpRequest): Promise<HttpResponse> {
     try {
-      const products = await this.listProduct.list()
+      const data = await this.listProduct.list()
+
+      const products = data.map((product) => ({
+        id: product.id,
+        name: product.name,
+        price: product.price,
+      }))
 
       return ok(products)
     } catch (error) {
